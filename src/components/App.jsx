@@ -17,6 +17,25 @@ export class App extends React.Component {
     number: '',
   };
 
+  componentDidMount() {
+    const storage = localStorage.getItem('contacts');
+    const parsedStorage = JSON.parse(storage);
+
+    if (parsedStorage !== null) {
+      console.log(parsedStorage);
+      this.setState({ contacts: parsedStorage });
+    }
+    return;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+
+    // console.log(localStorage.getItem('contacts', JSON.parse));
+  }
+
   addContact = ({ name, number }) => {
     let contact = {
       id: nanoid(),
@@ -37,7 +56,6 @@ export class App extends React.Component {
   };
 
   deleteContact = contactId => {
-    console.log(contactId);
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     }));
